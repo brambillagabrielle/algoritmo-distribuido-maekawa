@@ -27,7 +27,8 @@ public class Maekawa extends ReceiverAdapter {
     private View view;
     private Mensagem mensagem;
 
-    private int N;
+    private int N, M;
+    
     private Address[] listaMembros;
     private boolean meuVoto;
     private int votosRecebidos;
@@ -65,6 +66,7 @@ public class Maekawa extends ReceiverAdapter {
         this.view = novaView;
         listaMembros = view.getMembersRaw();
         N = view.size();
+        M = (int) Math.sqrt(N);
 
     }
 
@@ -199,7 +201,7 @@ public class Maekawa extends ReceiverAdapter {
 
         enviarMensagemParaQuorum("SOLICITAR_ENTRADA");
 
-        while (votosRecebidos < (int) Math.sqrt(N) + 1) {
+        while (votosRecebidos < M + 1) {
             sleep(5000);
         }
 
@@ -218,7 +220,7 @@ public class Maekawa extends ReceiverAdapter {
 
         mensagem = new Mensagem(operacao);
 
-        int ind = getIndice(), M = (int) Math.sqrt(N), linha = ind / M, coluna = ind % M, indMembro;
+        int ind = getIndice(), linha = ind / M, coluna = ind % M, indMembro;
 
         for (int c = 0; c < M; c++) {
 

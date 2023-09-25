@@ -1,0 +1,5 @@
+2023.09.25.08:01:27 - gabrielle-lenovo-13460 entrou da seção critica
+2023.09.25.08:01:37 - gabrielle-lenovo-13460 saiu da seção critica
+2023.09.25.08:01:40 - gabrielle-lenovo-64698 entrou da seção critica
+2023.09.25.08:01:50 - gabrielle-lenovo-64698 saiu da seção critica
+2023.09.25.08:01:52 - gabrielle-lenovo-13460 entrou da seção critica
