@@ -59,6 +59,7 @@ public class Maekawa extends ReceiverAdapter {
     /**
      * Método que é chamado sempre que uma nova view do grupo é aceita
      * Ele atualiza a view atual, a lista de membros e o número total de membros do grupo
+     * @param novaView
      */
     @Override
     public void viewAccepted(View novaView) {
@@ -106,6 +107,7 @@ public class Maekawa extends ReceiverAdapter {
     /**
      * Método que trata o recebimento das mensagens possíveis que podem ser trocadas dentro do grupo,
      * que podem ser para solicitar entrada e informar saída aos demais membros 
+     * @param m
      */
     @Override
     public void receive(Message m) {
@@ -304,26 +306,6 @@ public class Maekawa extends ReceiverAdapter {
             ps.println(timeStamp + " - " + mensagem);
             ps.flush();
         }
-
-    }
-
-    /**
-     * Método que converte uma representação de string de endereço em um objeto de endereço.
-     *
-     * @param stringAddress A representação de string do endereço
-     * @return O objeto de endereço correspondente, ou null se não encontrado
-     */
-    public Address stringToAddress(String stringAddress) {
-
-        for (Address a : view.getMembersRaw()) {
-
-            if (stringAddress.equals(a.toString())) {
-                return a;
-            }
-
-        }
-
-        return null;
 
     }
 
