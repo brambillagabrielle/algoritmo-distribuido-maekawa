@@ -16,6 +16,11 @@ import org.jgroups.View;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Classe que representa o funcionamento do algoritmo Maekawa para exclusão mútua
+ * 
+ * @author Estéfani Ferlin e Gabrielle Brambilla
+ */
 public class Maekawa extends ReceiverAdapter {
 
     private JChannel channel;
@@ -30,6 +35,11 @@ public class Maekawa extends ReceiverAdapter {
 
     Queue filaEspera = new LinkedList<>();
 
+    /**
+     * Método que inicia o processo Maekawa
+     *
+     * @throws Exception Se ocorrer um erro ao iniciar o processo
+     */
     void start() throws Exception {
 
         channel = new JChannel().setReceiver(this);
@@ -45,6 +55,10 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que é chamado sempre que uma nova view do grupo é aceita
+     * Ele atualiza a view atual, a lista de membros e o número total de membros do grupo
+     */
     @Override
     public void viewAccepted(View novaView) {
 
@@ -54,6 +68,15 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que inicia a simulação do algoritmo de Maekawa
+     * As condições de entradam são baseadas no índice do processo e no número total de membros
+     * no grupo. Se elas forem atendidas, a entrada é solicitada, e se autorizada, a seção
+     * crítica é executada
+     *
+     * @throws InterruptedException Se ocorrer uma interrupção durante a simulação
+     * @throws Exception            Se ocorrer um erro durante a simulação
+     */
     private void iniciaSimulacao() throws InterruptedException, Exception {
 
         System.out.println("Sou o processo: " + channel.getAddress());
@@ -78,6 +101,10 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que trata o recebimento das mensagens possíveis que podem ser trocadas dentro do grupo,
+     * que podem ser para solicitar entrada e informar saída aos demais membros 
+     */
     @Override
     public void receive(Message m) {
 
@@ -157,6 +184,13 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que solicita entrada na seção crítica e aguarda até que um número suficiente de votos seja
+     * recebido para permitir a entrada
+     *
+     * @return true se a entrada for autorizada pelo quorum; caso contrário, false
+     * @throws Exception Se ocorrer um erro ao solicitar entrada
+     */
     private boolean solicitarEntrada() throws Exception {
 
         System.out.println("Solicitando a entrada na seção crítica...");
@@ -173,6 +207,13 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que envia uma mensagem para todos os membros do quorum que estão na mesma linha e coluna da
+     * matriz de quorum, para garantir um número suficiente de votos e então autorizar a entrada na seção crítica
+     *
+     * @param operacao A operação a ser incluída na mensagem
+     * @throws Exception Se ocorrer um erro ao enviar a mensagem
+     */
     private void enviarMensagemParaQuorum(String operacao) throws Exception {
 
         mensagem = new Mensagem(operacao);
@@ -201,6 +242,11 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que obtém o índice do endereço atual na lista de membros
+     *
+     * @return O índice do endereço atual na lista de membros, ou -1 se não encontrado
+     */
     private int getIndice() {
 
         for (int i = 0; i < listaMembros.length; i++) {
@@ -215,6 +261,12 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que entra na seção crítica, realiza ações críticas e informa a saída aos demais membros
+     *
+     * @throws InterruptedException Se ocorrer uma interrupção durante a entrada na seção crítica
+     * @throws Exception            Se ocorrer um erro ao entrar ou sair da seção crítica
+     */
     public void secaoCritica() throws InterruptedException, Exception {
 
         System.out.println("Entrei na seção crítica!");
@@ -233,6 +285,13 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que escreve uma mensagem em um arquivo de log com carimbo de data e hora,
+     * para registrar eventos realizados
+     *
+     * @param mensagem A mensagem a ser registrada no arquivo
+     * @throws FileNotFoundException Se o arquivo de log não puder ser encontrado
+     */
     private void escreverArquivo(String mensagem) throws FileNotFoundException {
 
         SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd.HH:mm:ss");
@@ -246,6 +305,12 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método que converte uma representação de string de endereço em um objeto de endereço.
+     *
+     * @param stringAddress A representação de string do endereço
+     * @return O objeto de endereço correspondente, ou null se não encontrado
+     */
     public Address stringToAddress(String stringAddress) {
 
         for (Address a : view.getMembersRaw()) {
@@ -260,6 +325,12 @@ public class Maekawa extends ReceiverAdapter {
 
     }
 
+    /**
+     * Método principal que inicia o processo Maekawa
+     *
+     * @param args
+     * @throws Exception Se ocorrer um erro ao iniciar o processo
+     */
     public static void main(String[] args) throws Exception {
 
         Logger jgroupsLogger = Logger.getLogger("org.jgroups");
